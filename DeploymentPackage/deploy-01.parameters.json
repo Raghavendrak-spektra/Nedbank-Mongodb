@@ -6,7 +6,7 @@
       "value": "GET-DEPLOYMENT-ID"
     },
     "adminUsername": {
-      "value": "azureuser"
+      "value": "Assessmentuser"
     },
     "adminPassword": {
       "value": "GEN-PASSWORD"
