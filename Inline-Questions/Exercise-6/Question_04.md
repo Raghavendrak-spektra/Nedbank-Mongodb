@@ -8,21 +8,21 @@ The security team wants to review the database user assigned to the `customer360
 
 ## Options
 
-Option 1 : Performance Advisor
+Option 1 : Database Access
 
-Option 2 : Database Access
+Option 2 : Network Access
 
 Option 3 : Cluster Metrics
 
-Option 4 : Network Access
+Option 4 : Performance Advisor
 
 ## Answers
 
-Option 2
+Option 1 : 1
 
 ## Correct Answer Feedback
 
-Option 2 is correct, because Atlas Database Access is used to manage database users and their roles and permissions.
+Option 1 is correct, because Atlas Database Access is used to manage database users and their roles and permissions.
 
 ## Incorrect Answer Feedback
 

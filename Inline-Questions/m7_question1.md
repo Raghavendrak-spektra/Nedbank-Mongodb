@@ -7,17 +7,17 @@ The `customer360` application attempts to connect to a MongoDB Atlas cluster usi
 ## Options
 Option 1 : The MongoDB Atlas encryption settings to ensure TLS is disabled.
 
-Option 2 : The IP Whitelist (Network Access) settings in MongoDB Atlas to verify that the application's source IP address (or network CIDR range) is permitted to connect to the cluster.
+Option 2 : The database user passwords to ensure they are simple enough to avoid encoding issues.
 
-Option 3 : The database user passwords to ensure they are simple enough to avoid encoding issues.
+Option 3 : The IP Whitelist (Network Access) settings in MongoDB Atlas to verify that the application's source IP address (or network CIDR range) is permitted to connect to the cluster.
 
 Option 4 : The backup settings to confirm that automated backups are not blocking incoming connections.
 
 ## Answers
-Option 2 : 1
+Option 3 : 1
 
 ## Correct Answer Feedback
-Option 2 is correct.
+Option 3 is correct.
 
 ## Number of Retries
 1

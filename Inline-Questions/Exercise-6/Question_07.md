@@ -8,21 +8,21 @@ The reporting account should be able to read customer360 data but should not be 
 
 ## Options
 
-Option 1 : Only administrative operations succeed.
+Option 1 : Reads and administrative operations both succeed.
 
 Option 2 : All operations are denied.
 
-Option 3 : Reads succeed and administrative operations are denied.
+Option 3 : Only administrative operations succeed.
 
-Option 4 : Reads and administrative operations both succeed.
+Option 4 : Reads succeed and administrative operations are denied.
 
 ## Answers
 
-Option 3
+Option 4 : 1
 
 ## Correct Answer Feedback
 
-Option 3 is correct, because the account's intended purpose is reporting. Successful reads combined with denied administrative operations demonstrate that access is restricted appropriately.
+Option 4 is correct, because the account's intended purpose is reporting. Successful reads combined with denied administrative operations demonstrate that access is restricted appropriately.
 
 ## Incorrect Answer Feedback
 

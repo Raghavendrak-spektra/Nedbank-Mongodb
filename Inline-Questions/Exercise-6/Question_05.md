@@ -8,17 +8,17 @@ The reporting application only needs to query customer and order data. It must n
 
 ## Options
 
-Option 1 : Grant unrestricted database administrator access.
+Option 1 : Grant project owner access.
 
 Option 2 : Grant readWriteAnyDatabase.
 
 Option 3 : Grant only the required read access to the application database.
 
-Option 4 : Grant project owner access.
+Option 4 : Grant unrestricted database administrator access.
 
 ## Answers
 
-Option 3
+Option 3 : 1
 
 ## Correct Answer Feedback
 

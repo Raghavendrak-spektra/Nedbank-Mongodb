@@ -11,7 +11,7 @@ Option 3 : The database user lacks write permission on `customer360`; grant that
 Option 4 : The authentication source is necessarily wrong; change `authSource` repeatedly without changing the user's role.
 
 ## Answers
-Option 3
+Option 3 : 1
 
 ## Correct Answer Feedback
 Option 3 is correct answer, successful connection and reads show that the available cluster, IP access list, and current authentication settings permit access. The authorization error on insert indicates that the database user lacks the required write privilege. Assigning `readWrite` only on `customer360` is the scoped fix; the retest should continue to use the authentication database where the Atlas user is defined.

@@ -6,12 +6,12 @@ The `customers` collection validator requires `status` to be either `active` or 
 
 ## Options
 Option 1 : Change `consent.marketing` from the string `"true"` to the Boolean `true`.
-Option 2 : Change `status` from `"active"` to the Boolean `true`.
-Option 3 : Change `status` from `"active"` to `"pending"`.
-Option 4 : Remove the entire `consent` field from the customer document.
+Option 2 : Remove the entire `consent` field from the customer document.
+Option 3 : Change `status` from `"active"` to the Boolean `true`.
+Option 4 : Change `status` from `"active"` to `"pending"`.
 
 ## Answers
-Option 1
+Option 1 : 1
 
 ## Correct Answer Feedback
 Option 1 is correct answer, because `"true"` is a string rather than the Boolean value required by the validator; using `true` preserves the intended consent while `status: "active"` already satisfies the allowed status values.

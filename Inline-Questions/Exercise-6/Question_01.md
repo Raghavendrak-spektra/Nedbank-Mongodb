@@ -8,17 +8,17 @@ The `customer360` application cannot connect to its MongoDB Atlas cluster. The c
 
 ## Options
 
-Option 1 : The aggregation pipeline
+Option 1 : The customer document schema
 
 Option 2 : The Atlas Network Access IP Access List
 
-Option 3 : The customer document schema
+Option 3 : The aggregation pipeline
 
 Option 4 : The `customers` collection indexes
 
 ## Answers
 
-Option 2
+Option 2 : 1
 
 ## Correct Answer Feedback
 
