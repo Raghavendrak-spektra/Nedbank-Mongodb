@@ -28,15 +28,8 @@ Basic working knowledge of MongoDB: mongosh shell, CRUD operations (`insertOne`,
 
 A single Ubuntu 22.04 virtual machine runs MongoDB Community Edition 7.0. The `customer360` database holds customer profiles, orders, and audit events seeded with realistic data.
 
-```mermaid
-flowchart LR
-    Engineer[Nedbank Engineer] -->|SSH| LabVM[Ubuntu 22.04 Lab VM]
-    LabVM --> Mongod[mongod :27017]
-    Mongod --> DB[(customer360)]
-    DB --> Customers[customers collection]
-    DB --> Orders[orders collection]
-    DB --> Audit[audit_events collection]
-```
+ ![](./media/image.png)
+
 
 ## Getting Started with the lab
 
@@ -46,17 +39,15 @@ Your virtual machine and this **Guide** are available within your web browser. U
 
 1. On your lab environment page, you will be automatically logged into the Lab Virtual Machine (LabVM) where you will perform the lab activities.
 
-   ![](./media/gettingstarted.png)
+    ![](./media/image2.png)
 
 1. Find the **LabVM related details (2)** on the **Environment (1)** tab:
 
-   ![](./media/envdetails.png)
+    ![](./media/image3.png)
 
-   - **DeploymentID:** **<inject key="DeploymentID" enableCopy="true"/>**
-   - **LabVM Admin Username:** **<inject key="LabVM Admin Username" enableCopy="false"/>**
-   - **LabVM Admin Password:** **<inject key="LabVM Admin Password" enableCopy="false"/>**
-   - **LabVM DNS Name:** **<inject key="LabVM DNS Name" enableCopy="false"/>**
-   - **LabVM SSH Command:** **<inject key="LabVM SSH Command" enableCopy="false"/>**
+   - **LabVM Admin Username:** **<inject key="VMServerUsername" enableCopy="false"/>**
+   - **LabVM Admin Password:** **<inject key="VMServerPassword" enableCopy="false"/>**
+   - **LabVM DNS Name:** **<inject key="VMServerDNSName" enableCopy="false"/>**
 
 1. Your lab environment unique id for this session is **<inject key="DeploymentID" enableCopy="false"/>** - quote it if you contact support.
 
