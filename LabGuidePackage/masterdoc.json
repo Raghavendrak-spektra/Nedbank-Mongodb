@@ -5,35 +5,35 @@
 		"BaseURL": "https://github.com/SpektraSystems/Nedbank-MongoDB",
 		"Files": [
 			{
-				"RawFilePath": "https://raw.githubusercontent.com/SpektraSystems/Nedbank-MongoDB/refs/heads/main/LabGuidePackage/Lab%20Guide/Lab%20Guide/GettingStarted-V2.md?token=GHSAT0AAAAAAEG6PEZQMS4KASFTZCESBA4M2UQFYYQ",
+				"RawFilePath": "https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/LabGuidePackage/GettingStarted-V2.md",
 				"Order": 1
 			},
 			{
-				"RawFilePath": "https://raw.githubusercontent.com/SpektraSystems/Nedbank-MongoDB/refs/heads/main/LabGuidePackage/Lab%20Guide/Lab%20Guide/Exercise-01.md?token=GHSAT0AAAAAAEG6PEZQ6AFZSMFEMAA75A322UQFZFQ",
+				"RawFilePath": "https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/LabGuidePackage/Exercise-01.md",
 				"Order": 2
-			}
+			},
 			{
-				"RawFilePath": "https://raw.githubusercontent.com/SpektraSystems/Nedbank-MongoDB/refs/heads/main/LabGuidePackage/Lab%20Guide/Lab%20Guide/Exercise-02.md?token=GHSAT0AAAAAAEG6PEZQ6AFZSMFEMAA75A322UQFZFQ",
+				"RawFilePath": "https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/LabGuidePackage/Exercise-02.md",
 				"Order": 3
-			}
+			},
 			{
-				"RawFilePath": "https://raw.githubusercontent.com/SpektraSystems/Nedbank-MongoDB/refs/heads/main/LabGuidePackage/Lab%20Guide/Lab%20Guide/Exercise-03.md?token=GHSAT0AAAAAAEG6PEZQ6AFZSMFEMAA75A322UQFZFQ",
+				"RawFilePath": "https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/LabGuidePackage/Exercise-03.md",
 				"Order": 4
-			}
+			},
 			{
-				"RawFilePath": "https://raw.githubusercontent.com/SpektraSystems/Nedbank-MongoDB/refs/heads/main/LabGuidePackage/Lab%20Guide/Lab%20Guide/Exercise-04.md?token=GHSAT0AAAAAAEG6PEZQ6AFZSMFEMAA75A322UQFZFQ",
+				"RawFilePath": "https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/LabGuidePackage/Exercise-04.md",
 				"Order": 5
-			}
+			},
 			{
-				"RawFilePath": "https://raw.githubusercontent.com/SpektraSystems/Nedbank-MongoDB/refs/heads/main/LabGuidePackage/Lab%20Guide/Lab%20Guide/Exercise-05.md?token=GHSAT0AAAAAAEG6PEZQ6AFZSMFEMAA75A322UQFZFQ",
+				"RawFilePath": "https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/LabGuidePackage/Exercise-05.md",
 				"Order": 6
-			}
+			},
 			{
-				"RawFilePath": "https://raw.githubusercontent.com/SpektraSystems/Nedbank-MongoDB/refs/heads/main/LabGuidePackage/Lab%20Guide/Lab%20Guide/Exercise-06.md?token=GHSAT0AAAAAAEG6PEZQ6AFZSMFEMAA75A322UQFZFQ",
+				"RawFilePath": "https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/LabGuidePackage/Exercise-06.md",
 				"Order": 7
 			},
-      {
-				"RawFilePath": "https://raw.githubusercontent.com/SpektraSystems/Nedbank-MongoDB/refs/heads/main/LabGuidePackage/Lab%20Guide/Lab%20Guide/Exercise-07.md?token=GHSAT0AAAAAAEG6PEZQ6AFZSMFEMAA75A322UQFZFQ",
+      		{
+				"RawFilePath": "https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/LabGuidePackage/Exercise-07.md",
 				"Order": 8
 			}
 		]
