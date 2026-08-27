@@ -1,0 +1,29 @@
+{
+  "Name": "mongodb-customer-data-fundamentals-Candidate",
+  "Description": "Custom RBAC role for the MongoDB Customer Data Fundamentals candidate sandbox",
+  "IsCustom": true,
+  "Actions": [
+    "Microsoft.Resources/deployments/*",
+    "Microsoft.Resources/resources/read",
+    "Microsoft.Resources/subscriptions/resourceGroups/read",
+    "Microsoft.Compute/virtualMachines/*",
+    "Microsoft.Compute/disks/*",
+    "Microsoft.Compute/images/read",
+    "Microsoft.Compute/skus/read",
+    "Microsoft.Compute/locations/usages/read",
+    "Microsoft.Compute/locations/vmSizes/read",
+    "Microsoft.Compute/locations/publishers/artifacttypes/types/versions/read",
+    "Microsoft.Network/virtualNetworks/*",
+    "Microsoft.Network/networkInterfaces/*",
+    "Microsoft.Network/networkSecurityGroups/*",
+    "Microsoft.Network/publicIPAddresses/*",
+    "Microsoft.Network/locations/usages/read"
+  ],
+  "NotActions": [
+    "Microsoft.Authorization/*/Write",
+    "Microsoft.Authorization/*/Delete"
+  ],
+  "AssignableScopes": [
+    "/subscriptions/{SUBSCRIPTION_ID}/resourceGroups/rg-candidate-{DEPLOYMENT_ID}"
+  ]
+}
