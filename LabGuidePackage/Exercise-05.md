@@ -14,9 +14,15 @@ You must create user `c360Admin` in the `admin` database with administrative pri
 
 Answer the following questions to assess your understanding of MongoDB security initialization:
 
-<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
 
+<br>
+
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+
+<br>
 
 ---
 
@@ -30,9 +36,20 @@ You must create user `c360Reporter` with the `read` role on `customer360` (no wr
 
 Answer the following questions to assess your understanding of least-privilege user configuration and permission verification:
 
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+
+<br>
+
 ---
 
 ## Success Criteria

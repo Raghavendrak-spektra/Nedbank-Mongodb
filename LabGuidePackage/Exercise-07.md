@@ -14,8 +14,15 @@ You must diagnose this at two levels: (1) network access—is the application's 
 
 Answer the following questions to assess your understanding of MongoDB Atlas network and authentication access:
 
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m7_question1.md" />
+
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m7_question2.md" />
+
+<br>
 
 ---
 
@@ -29,9 +36,19 @@ Additionally, you discover the user account has been over-provisioned with the `
 
 Answer the following questions to assess your understanding of MongoDB Atlas authorization and least-privilege principles:
 
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m7_question3.md" />
+
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m7_question4.md" />
+
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m7_question5.md" />
+
+<br>
 
 ---
 

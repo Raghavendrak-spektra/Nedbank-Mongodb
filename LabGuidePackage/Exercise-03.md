@@ -14,8 +14,15 @@ Your baseline `explain("executionStats")` query shows: `totalDocsExamined: 15,00
 
 Answer the following questions to assess your understanding of query performance analysis:
 
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question1.md" />
+
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+
+<br>
 
 ---
 
@@ -27,9 +34,19 @@ Answer the following questions to assess your understanding of query performance
 
 Answer the following questions to assess your understanding of index optimization and validation:
 
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question3.md" />
+
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question4.md" />
+
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question5.md" />
+
+<br>
 
 ---
 

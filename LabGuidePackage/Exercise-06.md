@@ -14,8 +14,15 @@ You must gather evidence using Linux platform checks: service status, process li
 
 Answer the following questions to assess your understanding of systematic troubleshooting:
 
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m6_question1.md" />
+
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m6_question2.md" />
+
+<br>
 
 ---
 
@@ -29,9 +36,19 @@ Recovery involves: (1) enabling the service so it starts automatically on reboot
 
 Answer the following questions to assess your understanding of service recovery and validation:
 
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m6_question3.md" />
+
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m6_question4.md" />
+
+<br>
+
 <question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m6_question5.md" />
+
+<br>
 
 ---
 
