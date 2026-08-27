@@ -14,8 +14,9 @@ You must create user `c360Admin` in the `admin` database with administrative pri
 
 Answer the following questions to assess your understanding of MongoDB security initialization:
 
-- [m4_question1.md](../Inline-Questions/m4_question1.md) - Understand why admin user must be created before authorization is enabled
-- [m4_question2.md](../Inline-Questions/m4_question2.md) - Interpret connection behavior after authorization is enabled
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+
 
 ---
 
@@ -29,10 +30,9 @@ You must create user `c360Reporter` with the `read` role on `customer360` (no wr
 
 Answer the following questions to assess your understanding of least-privilege user configuration and permission verification:
 
-- [m4_question3.md](../Inline-Questions/m4_question3.md) - Understand least-privilege principles in role assignment
-- [m4_question4.md](../Inline-Questions/m4_question4.md) - Verify allowed read operations
-- [m4_question5.md](../Inline-Questions/m4_question5.md) - Interpret denied operations as proof of correct authorization
-
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
 ---
 
 ## Success Criteria

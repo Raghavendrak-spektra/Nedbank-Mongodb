@@ -139,7 +139,12 @@ In this task, you will run the report and preserve evidence for operations revie
 
 5. Run the CloudLabs validation step for this exercise.
 
-   `<validation step="Validate M4">`
+> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
+> - Hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
+> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
+> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
+
+   <validation step="9f1d60fb-7bbc-4015-ae41-e8e50528a6bd" />
 
 6. If validation fails, verify that:
 

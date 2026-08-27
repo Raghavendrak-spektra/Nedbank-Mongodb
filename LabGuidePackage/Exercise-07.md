@@ -14,8 +14,8 @@ You must diagnose this at two levels: (1) network access—is the application's 
 
 Answer the following questions to assess your understanding of MongoDB Atlas network and authentication access:
 
-- [m7_question1.md](../Inline-Questions/m7_question1.md) - Diagnose network access failures using IP Whitelist
-- [m7_question2.md](../Inline-Questions/m7_question2.md) - Distinguish network access from authentication failures
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m7_question1.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m7_question2.md" />
 
 ---
 
@@ -29,9 +29,9 @@ Additionally, you discover the user account has been over-provisioned with the `
 
 Answer the following questions to assess your understanding of MongoDB Atlas authorization and least-privilege principles:
 
-- [m7_question3.md](../Inline-Questions/m7_question3.md) - Diagnose authorization failures and fix permissions
-- [m7_question4.md](../Inline-Questions/m7_question4.md) - Apply least-privilege principles to reduce unnecessary permissions
-- [m7_question5.md](../Inline-Questions/m7_question5.md) - Verify comprehensive access control across all security layers
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m7_question3.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m7_question4.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m7_question5.md" />
 
 ---
 

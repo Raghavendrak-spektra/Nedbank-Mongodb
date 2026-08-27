@@ -216,11 +216,12 @@ Use the backup you created earlier to recover the customer records that were del
 
 6. Keep the temporary recovery database available until the recovery has been validated.
 
-> **Important:** 
-> Validation requires the temporary customer360_recovery database to be created successfully. Ensure that the customer360_recovery database contains the recovered customers collection before running the validation step.
+> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
+> - Hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
+> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
+> - If you need any assistance, please contact us at labs-support@spektrasystems.com. We are available 24/7 to help you out.
 
-
-<validation step="Validate M2"/>
+   <validation step="6ceac6de-b182-4fd9-b692-15eb7f2aa328" />
 
 
 ## Summary

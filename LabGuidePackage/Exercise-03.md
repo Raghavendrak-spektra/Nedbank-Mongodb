@@ -14,8 +14,8 @@ Your baseline `explain("executionStats")` query shows: `totalDocsExamined: 15,00
 
 Answer the following questions to assess your understanding of query performance analysis:
 
-- [m3_question1.md](../Inline-Questions/m3_question1.md) - Analyze the examined-to-returned ratio and identify the performance issue
-- [m3_question2.md](../Inline-Questions/m3_question2.md) - Design an appropriate index using the ESR rule
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question1.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
 
 ---
 
@@ -27,9 +27,9 @@ Answer the following questions to assess your understanding of query performance
 
 Answer the following questions to assess your understanding of index optimization and validation:
 
-- [m3_question3.md](../Inline-Questions/m3_question3.md) - Interpret the optimized execution plan and FETCH stage
-- [m3_question4.md](../Inline-Questions/m3_question4.md) - Manage experimental indexes before validation
-- [m3_question5.md](../Inline-Questions/m3_question5.md) - Defend your optimization using query plan quality metrics
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question3.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question4.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question5.md" />
 
 ---
 
