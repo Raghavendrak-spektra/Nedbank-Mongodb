@@ -6,18 +6,19 @@ You need to ensure that your created index `m3_completed_orders_idx` is the only
 
 ## Options
 Option 1 : Leave all three indexes in place because they provide redundancy and may help with other queries.
-Option 2 : Drop the experimental indexes `m3_test_v1` and `m3_test_v2`, keeping only `m3_completed_orders_idx` which you can justify from the query predicate and sort evidence.
+
+Option 2 : Drop the experimental indexes `m3_test_v1` and `m3_test_v2`, keeping only `m3_completed_orders_idx` which you can justify from the query predicate and sort 
+evidence.
+
 Option 3 : Drop all three indexes and create a new one with a different name to avoid confusion with failed experiments.
+
 Option 4 : Keep the experimental indexes but rename them to follow the `m3_` naming convention so they appear intentional.
 
 ## Answers
-Option 2
+Option 2 : 1
 
 ## Correct Answer Feedback
-Option 2 is correct. The assessment expects a clear, justified index decision. Dropping experimental indexes demonstrates that you made a deliberate design choice based on query evidence (predicate, sort, and execution statistics), rather than trial-and-error. Keeping only the well-justified `m3_completed_orders_idx` shows professional database operations practice.
-
-## Incorrect Answer Feedback
-The selected option is not correct. Option 2 is the correct answer. Leaving experimental indexes behind violates best practices and suggests uncertainty about the index design. A single, well-justified index supported by before-and-after evidence is what the assessment validation expects.
+Option 2 is correct.
 
 ## Number of Retries
 1

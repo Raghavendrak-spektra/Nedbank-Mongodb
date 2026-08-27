@@ -6,18 +6,18 @@ After analyzing the query predicate `{ status: "completed", orderDate: { $gte: I
 
 ## Options
 Option 1 : Create index `{ orderDate: -1, status: 1 }` because the sort field should come first in the index.
+
 Option 2 : Create index `{ status: 1, orderDate: -1 }` to support equality filter first, then sort descending on the range field.
+
 Option 3 : Create index `{ orderDate: 1 }` because the query only needs to optimize the sort operation.
+
 Option 4 : Create index `{ status: 1, orderDate: 1 }` and MongoDB will automatically reverse the direction for descending sorts.
 
 ## Answers
-Option 2
+Option 2 : 1
 
 ## Correct Answer Feedback
-Option 2 is correct. Following the ESR (Equality, Sort, Range) rule, the index should have: status first (equality predicate), then orderDate (which serves both as range filter and sort field). Descending direction on orderDate matches the query's descending sort requirement, allowing MongoDB to traverse the index in the correct order.
-
-## Incorrect Answer Feedback
-The selected option is not correct. Option 2 is the correct answer. The ESR rule guides optimal index design: Equality predicates first, then Sort fields matching the sort direction, then Range predicates (or combined range/sort in this case).
+Option 2 is correct.
 
 ## Number of Retries
 1
