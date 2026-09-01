@@ -16,11 +16,11 @@ Answer the following questions to assess your understanding of MongoDB security 
 
 <br>
 
-<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m5_question1.md" />
 
 <br>
 
-<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m5_question2.md" />
 
 <br>
 
@@ -38,15 +38,15 @@ Answer the following questions to assess your understanding of least-privilege u
 
 <br>
 
-<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m5_question3.md" />
 
 <br>
 
-<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m5_question4.md" />
 
 <br>
 
-<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m3_question2.md" />
+<question source="https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/Inline-Questions/m5_question5.md" />
 
 <br>
 
