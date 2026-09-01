@@ -5,26 +5,32 @@ set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
 # ============================================================
-# MongoDB Customer Data Fundamentals
+# MongoDB — Dashboard Query Performance
 # Ubuntu 22.04
 # MongoDB 7.0
+#
+# Seeds the branchops banking dataset used by the
+# branch-performance dashboard assessment:
+#   - 40   branches
+#   - 20000 transactions (deliberately unindexed for the
+#           dashboard query so the baseline is a COLLSCAN)
+#   - audit_events
 # ============================================================
 
 # ------------------------------------------------------------
 # Paths
 # ------------------------------------------------------------
+LAB_USER="AssessmentUser"
+WORK_ROOT="/home/${LAB_USER}/mongodb-dashboard"
+DATA_DIR="${WORK_ROOT}/data"
+SCRIPTS_DIR="${WORK_ROOT}/scripts"
+EVIDENCE_DIR="${WORK_ROOT}/evidence"
+RESET_DIR="${WORK_ROOT}/reset"
 
-LAB_USER="labuser"
-
-WORK_ROOT="/home/${LAB_USER}/mongodb-customer-data"
-BACKUP_ROOT="${WORK_ROOT}/backups"
-EVIDENCE_ROOT="${WORK_ROOT}/evidence"
-
-TMP_ROOT="/tmp/cloudlabs-mongodb"
-SEED_SCRIPT="${TMP_ROOT}/seed-customer360.js"
+SEED_SCRIPT="${DATA_DIR}/seed-branchops.js"
 
 LOG_DIR="/var/log/cloudlabs"
-BOOTSTRAP_LOG="${LOG_DIR}/mongodb-bootstrap.log"
+BOOTSTRAP_LOG="${LOG_DIR}/mongodb-dashboard-bootstrap.log"
 
 # ------------------------------------------------------------
 # Logging
@@ -40,28 +46,21 @@ log() {
 }
 
 log "=========================================="
-log "MongoDB Customer Data Fundamentals"
+log "MongoDB — Dashboard Query Performance"
 log "Bootstrap started"
 log "=========================================="
 
 # ------------------------------------------------------------
-# Validate lab user
+# Detect the interactive lab user (first uid>=1000 login user)
 # ------------------------------------------------------------
 
-if ! id "$LAB_USER" >/dev/null 2>&1; then
-    log "ERROR: User '$LAB_USER' does not exist."
-    exit 1
+LAB_USER="$(getent passwd | awk -F: '$3 >= 1000 && $7 ~ /(bash|sh)$/ { print $1; exit }')"
+
+if [ -z "$LAB_USER" ]; then
+    log "WARNING: No interactive lab user detected. Workspace symlink will be skipped."
+else
+    log "Detected lab user: $LAB_USER"
 fi
-
-LAB_HOME="$(getent passwd "$LAB_USER" | cut -d: -f6)"
-
-if [ -z "$LAB_HOME" ]; then
-    log "ERROR: Could not determine home directory for $LAB_USER."
-    exit 1
-fi
-
-log "Lab user: $LAB_USER"
-log "Lab home: $LAB_HOME"
 
 # ------------------------------------------------------------
 # Create learner workspace
@@ -69,25 +68,7 @@ log "Lab home: $LAB_HOME"
 
 log "Creating learner workspace"
 
-mkdir -p "$WORK_ROOT"
-mkdir -p "$BACKUP_ROOT"
-mkdir -p "$EVIDENCE_ROOT"
-
-chown -R "${LAB_USER}:${LAB_USER}" "$WORK_ROOT"
-
-chmod 755 "$WORK_ROOT"
-chmod 755 "$BACKUP_ROOT"
-chmod 755 "$EVIDENCE_ROOT"
-
-# ------------------------------------------------------------
-# Create temporary bootstrap directory
-# ------------------------------------------------------------
-
-log "Preparing temporary bootstrap directory"
-
-rm -rf "$TMP_ROOT"
-mkdir -p "$TMP_ROOT"
-chmod 700 "$TMP_ROOT"
+mkdir -p "$WORK_ROOT" "$DATA_DIR" "$SCRIPTS_DIR" "$EVIDENCE_DIR" "$RESET_DIR"
 
 # ------------------------------------------------------------
 # Install prerequisites
@@ -96,7 +77,6 @@ chmod 700 "$TMP_ROOT"
 log "Installing prerequisite packages"
 
 # Fix for Ubuntu command-not-found database update issue
-# Remove the problematic post-invoke hook temporarily
 rm -f /etc/apt/apt.conf.d/50command-not-found
 
 apt-get update -y
@@ -104,7 +84,8 @@ apt-get update -y
 apt-get install -y \
     ca-certificates \
     curl \
-    gnupg
+    gnupg \
+    jq
 
 # ------------------------------------------------------------
 # Configure MongoDB 7.0 repository
@@ -122,8 +103,18 @@ curl -fsSL \
 
 chmod 644 /usr/share/keyrings/mongodb-server-7.0.gpg
 
-cat > /etc/apt/sources.list.d/mongodb-org-7.0.list <<'EOF'
-deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse
+ARCHITECTURE="$(dpkg --print-architecture)"
+
+case "$ARCHITECTURE" in
+    amd64|arm64) ;;
+    *)
+        log "ERROR: Unsupported architecture: $ARCHITECTURE"
+        exit 11
+        ;;
+esac
+
+cat > /etc/apt/sources.list.d/mongodb-org-7.0.list <<EOF
+deb [ arch=${ARCHITECTURE} signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse
 EOF
 
 apt-get update -y
@@ -134,10 +125,10 @@ apt-get update -y
 
 log "Installing MongoDB"
 
-apt-get install -y mongodb-org
+apt-get install -y mongodb-org mongodb-database-tools
 
 # ------------------------------------------------------------
-# Configure MongoDB
+# Configure MongoDB (localhost only for this single-VM lab)
 # ------------------------------------------------------------
 
 log "Configuring MongoDB"
@@ -148,9 +139,6 @@ if [ ! -f "$MONGOD_CONF" ]; then
     log "ERROR: $MONGOD_CONF was not created."
     exit 1
 fi
-
-# Ensure MongoDB listens only on localhost.
-# This is intentional for this single-VM assessment environment.
 
 sed -i '/^[[:space:]]*bindIp:/d' "$MONGOD_CONF"
 
@@ -184,7 +172,6 @@ log "Waiting for MongoDB to become available"
 MONGO_READY="false"
 
 for i in $(seq 1 60); do
-
     if mongosh \
         --host 127.0.0.1 \
         --port 27017 \
@@ -197,349 +184,187 @@ for i in $(seq 1 60); do
     fi
 
     sleep 2
-
 done
 
 if [ "$MONGO_READY" != "true" ]; then
-
     log "ERROR: MongoDB did not become available."
-
     systemctl status mongod --no-pager || true
-
-    journalctl \
-        -u mongod \
-        --no-pager \
-        -n 100 || true
-
+    journalctl -u mongod --no-pager -n 100 || true
     exit 1
 fi
 
 log "MongoDB is ready"
 
-# ------------------------------------------------------------
-# Verify MongoDB version
-# ------------------------------------------------------------
-
 MONGO_VERSION="$(
-    mongosh \
-        --host 127.0.0.1 \
-        --port 27017 \
-        --quiet \
-        --eval 'db.version()'
+    mongosh --host 127.0.0.1 --port 27017 --quiet --eval 'db.version()'
 )"
 
 log "MongoDB version: $MONGO_VERSION"
 
 # ------------------------------------------------------------
-# Create temporary seed script
+# Write the deterministic branchops seed script
 # ------------------------------------------------------------
 
-log "Creating customer360 seed script"
+log "Writing branchops seed script"
 
-cat > "$SEED_SCRIPT" <<'EOF'
-const customer360 = db.getSiblingDB("customer360");
+cat > "$SEED_SCRIPT" <<'MONGOSEED'
+const dbName = "branchops";
+const bdb = db.getSiblingDB(dbName);
 
-print("Using database: " + customer360.getName());
-
+print("Using database: " + bdb.getName());
 print("Dropping existing collections...");
 
-customer360.customers.drop();
-customer360.orders.drop();
-customer360.audit_events.drop();
+bdb.branches.drop();
+bdb.transactions.drop();
+bdb.audit_events.drop();
+bdb.dashboard_meta.drop();
 
-const firstNames = [
-    "Jordan",
-    "Taylor",
-    "Morgan",
-    "Riley",
-    "Casey",
-    "Jamie",
-    "Drew",
-    "Quinn",
-    "Skyler",
-    "Avery"
-];
-
-const lastNames = [
-    "Diaz",
-    "Harris",
-    "Khan",
-    "Chen",
-    "Garcia",
-    "Jones",
-    "Baker",
-    "Evans",
-    "Ivanov",
-    "Adams"
-];
-
-const regions = [
-    "South",
-    "East",
-    "West",
-    "Central",
-    "North"
-];
-
-const loyaltyTiers = [
-    "Bronze",
-    "Silver",
-    "Gold",
-    "Platinum"
-];
-
-const channels = [
-    "email",
-    "sms",
-    "phone",
-    "chat"
+const provinces = [
+    "Gauteng",
+    "Western Cape",
+    "KwaZulu-Natal",
+    "Eastern Cape",
+    "Free State",
+    "Limpopo",
+    "Mpumalanga",
+    "North West",
+    "Northern Cape"
 ];
 
 const cities = [
-    "Austin",
-    "Boston",
-    "Denver",
-    "Phoenix",
-    "Seattle"
+    "Johannesburg",
+    "Cape Town",
+    "Durban",
+    "Gqeberha",
+    "Bloemfontein",
+    "Polokwane",
+    "Mbombela",
+    "Rustenburg",
+    "Kimberley",
+    "Pretoria"
 ];
 
-const statuses = [
-    "active",
-    "active",
-    "active",
-    "active",
-    "inactive"
+const txnTypes = ["deposit", "withdrawal", "transfer", "billpayment"];
+const channels = ["branch", "atm", "online", "mobile"];
+
+// ~70% completed so the dashboard query has a rich result set.
+const txnStatuses = [
+    "completed", "completed", "completed", "completed",
+    "completed", "completed", "completed",
+    "pending", "failed", "reversed"
 ];
 
-const customers = [];
+print("Generating 40 branches...");
 
-print("Generating 1000 customers...");
+const branches = [];
 
-for (let i = 1; i <= 1000; i++) {
+for (let i = 1; i <= 40; i++) {
+    const padded = String(i).padStart(3, "0");
 
-    const padded = String(i).padStart(4, "0");
-
-    customers.push({
-        customerId: `CUST-${padded}`,
-
-        firstName:
-            firstNames[(i - 1) % firstNames.length],
-
-        lastName:
-            lastNames[(i - 1) % lastNames.length],
-
-        email:
-            `customer${padded}@contoso-retail.example`,
-
-        phone:
-            `+1-555-${String(i).padStart(6, "0")}`,
-
-        region:
-            regions[(i - 1) % regions.length],
-
-        loyaltyTier:
-            loyaltyTiers[(i - 1) % loyaltyTiers.length],
-
-        status:
-            statuses[(i - 1) % statuses.length],
-
-        createdAt:
-            new Date(
-                Date.UTC(
-                    2023,
-                    (i - 1) % 12,
-                    ((i - 1) % 27) + 1,
-                    9,
-                    0,
-                    0
-                )
-            ),
-
-        updatedAt:
-            new Date(
-                Date.UTC(
-                    2023,
-                    (i - 1) % 12,
-                    ((i - 1) % 27) + 1,
-                    9,
-                    0,
-                    0
-                )
-            ),
-
-        consent: {
-            marketing: i % 3 !== 0,
-            supportContact: i % 5 !== 0
-        },
-
-        profile: {
-            preferredChannel:
-                channels[(i - 1) % channels.length],
-
-            lifetimeValueBand:
-                i % 3 === 0
-                    ? "low"
-                    : i % 3 === 1
-                        ? "medium"
-                        : "high"
-        },
-
-        address: {
-            city:
-                cities[(i - 1) % cities.length],
-
-            country: "US"
-        }
+    branches.push({
+        branchCode: "BR-" + padded,
+        name: "Nedbank Branch " + padded,
+        region: provinces[(i - 1) % provinces.length],
+        city: cities[(i - 1) % cities.length],
+        openedAt: new Date(Date.UTC(2015 + (i % 8), (i - 1) % 12, ((i - 1) % 27) + 1)),
+        active: true
     });
 }
 
-print("Inserting customers...");
+bdb.branches.insertMany(branches, { ordered: true });
+print("Inserted branches: " + bdb.branches.countDocuments());
 
-const customerResult =
-    customer360.customers.insertMany(customers);
+print("Generating 20000 transactions...");
 
-print(
-    "Inserted customers: " +
-    customerResult.insertedIds.length
-);
+const batch = [];
 
-const orders = [];
+for (let i = 1; i <= 20000; i++) {
 
-print("Generating 5000 orders...");
+    const branchNumber = ((i * 7) % 40) + 1;
+    const branchCode = "BR-" + String(branchNumber).padStart(3, "0");
 
-for (let i = 1; i <= 5000; i++) {
+    const amount = Number(
+        (((i * 37) % 24000) + 150 + (i % 100) / 100).toFixed(2)
+    );
 
-    const customerNumber =
-        ((i - 1) % 1000) + 1;
-
-    const customerId =
-        `CUST-${String(customerNumber).padStart(4, "0")}`;
-
-    orders.push({
-
-        orderId:
-            `ORD-${String(i).padStart(6, "0")}`,
-
-        customerId:
-            customerId,
-
-        orderDate:
-            new Date(
-                Date.UTC(
-                    2024,
-                    (i - 1) % 12,
-                    ((i - 1) % 27) + 1
-                )
-            ),
-
-        status:
-            i % 5 === 0
-                ? "cancelled"
-                : i % 4 === 0
-                    ? "shipped"
-                    : "completed",
-
-        amount:
-            Number(((i % 250) + 25.50).toFixed(2)),
-
-        channel:
-            i % 4 === 0
-                ? "web"
-                : i % 4 === 1
-                    ? "store"
-                    : i % 4 === 2
-                        ? "mobile"
-                        : "partner"
+    batch.push({
+        txnId: "TXN-" + String(i).padStart(7, "0"),
+        branchCode: branchCode,
+        accountId: "ACC-" + String(((i * 13) % 9000) + 1).padStart(5, "0"),
+        txnType: txnTypes[i % txnTypes.length],
+        channel: channels[Math.floor(i / 4) % channels.length],
+        status: txnStatuses[i % txnStatuses.length],
+        amount: amount,
+        currency: "ZAR",
+        transactionDate: new Date(
+            Date.UTC(2025, i % 12, (i % 27) + 1, i % 24, i % 60, 0)
+        ),
+        tellerId: "TLR-" + String((i % 150) + 1).padStart(3, "0")
     });
+
+    if (batch.length === 1000) {
+        bdb.transactions.insertMany(batch, { ordered: true });
+        batch.length = 0;
+    }
 }
 
-print("Inserting orders...");
+if (batch.length > 0) {
+    bdb.transactions.insertMany(batch, { ordered: true });
+}
 
-const orderResult =
-    customer360.orders.insertMany(orders);
-
-print(
-    "Inserted orders: " +
-    orderResult.insertedIds.length
-);
+print("Inserted transactions: " + bdb.transactions.countDocuments());
 
 print("Creating audit event...");
 
-customer360.audit_events.insertOne({
-
-    eventType: "bootstrap",
-
-    source: "cloudlabs",
-
-    timestamp: new Date(),
-
-    description:
-        "customer360 database initialized"
+bdb.audit_events.insertOne({
+    module: "bootstrap",
+    eventType: "seed-created",
+    operator: "cloudlabs-cse",
+    note: "Initial branchops dataset created with 40 branches and 20000 transactions.",
+    createdAt: new Date()
 });
 
-print("Creating indexes...");
+print("Creating seed indexes...");
 
-customer360.customers.createIndex(
-    { customerId: 1 },
-    { unique: true }
-);
+/*
+ * IMPORTANT: Do not create any index that supports the
+ * branch-performance dashboard query. The Module 3 baseline
+ * must be a COLLSCAN so the candidate can diagnose it and
+ * design the ESR compound index themselves.
+ */
 
-customer360.customers.createIndex(
-    { email: 1 }
-);
-
-customer360.customers.createIndex(
-    { region: 1, loyaltyTier: 1 }
-);
-
-customer360.orders.createIndex(
-    { orderId: 1 },
-    { unique: true }
-);
-
-customer360.orders.createIndex(
-    { customerId: 1 }
-);
-
-customer360.orders.createIndex(
-    { orderDate: 1 }
+bdb.branches.createIndex({ branchCode: 1 }, { unique: true, name: "ux_branchCode" });
+bdb.transactions.createIndex({ txnId: 1 }, { unique: true, name: "ux_txnId" });
+bdb.transactions.createIndex({ accountId: 1 }, { name: "ix_txn_accountId" });
+bdb.audit_events.createIndex(
+    { module: 1, eventType: 1, createdAt: -1 },
+    { name: "ix_audit_module_event_created" }
 );
 
 print("Seed completed.");
 
 printjson({
-    database: "customer360",
-
-    customers:
-        customer360.customers.countDocuments(),
-
-    orders:
-        customer360.orders.countDocuments(),
-
-    audit_events:
-        customer360.audit_events.countDocuments(),
-
-    customer_indexes:
-        customer360.customers.getIndexes().length,
-
-    order_indexes:
-        customer360.orders.getIndexes().length
+    database: dbName,
+    branches: bdb.branches.countDocuments(),
+    transactions: bdb.transactions.countDocuments(),
+    audit_events: bdb.audit_events.countDocuments(),
+    transaction_indexes: bdb.transactions.getIndexes().length
 });
-EOF
+MONGOSEED
 
-chmod 600 "$SEED_SCRIPT"
+chmod 0644 "$SEED_SCRIPT"
 
 # ------------------------------------------------------------
 # Execute seed script
 # ------------------------------------------------------------
 
-log "Seeding customer360 database"
+log "Seeding branchops database"
 
 mongosh \
     --host 127.0.0.1 \
     --port 27017 \
     --quiet \
-    --file "$SEED_SCRIPT"
+    --file "$SEED_SCRIPT" | tee "${EVIDENCE_DIR}/bootstrap-seed-output.txt"
 
 # ------------------------------------------------------------
 # Verify database contents
@@ -547,132 +372,160 @@ mongosh \
 
 log "Running database verification"
 
-CUSTOMER_COUNT="$(
-    mongosh \
-        --host 127.0.0.1 \
-        --port 27017 \
-        --quiet \
-        --eval '
-            const customer360 =
-                db.getSiblingDB("customer360");
-
-            print(
-                customer360.customers.countDocuments()
-            );
-        '
+COUNTS_OUTPUT="$(
+    mongosh branchops --quiet --eval \
+        'print("branches=" + db.branches.countDocuments() + ";transactions=" + db.transactions.countDocuments() + ";audit_events=" + db.audit_events.countDocuments())'
 )"
 
-ORDER_COUNT="$(
-    mongosh \
-        --host 127.0.0.1 \
-        --port 27017 \
-        --quiet \
-        --eval '
-            const customer360 =
-                db.getSiblingDB("customer360");
+log "Counts: $COUNTS_OUTPUT"
 
-            print(
-                customer360.orders.countDocuments()
-            );
-        '
+echo "$COUNTS_OUTPUT" | grep -q 'branches=40;transactions=20000' || {
+    log "ERROR: Unexpected seed counts: $COUNTS_OUTPUT"
+    exit 13
+}
+
+# The dashboard query must start life as a collection scan.
+BASELINE_STAGE="$(
+    mongosh branchops --quiet --eval '
+const exp = db.transactions.find({
+    branchCode: "BR-014",
+    status: "completed",
+    amount: { $gte: 5000 }
+}).sort({ transactionDate: -1 }).limit(50).explain("executionStats");
+print(exp.executionStats.executionStages.stage + "/" + exp.queryPlanner.winningPlan.stage);
+'
 )"
 
-AUDIT_COUNT="$(
-    mongosh \
-        --host 127.0.0.1 \
-        --port 27017 \
-        --quiet \
-        --eval '
-            const customer360 =
-                db.getSiblingDB("customer360");
-
-            print(
-                customer360.audit_events.countDocuments()
-            );
-        '
-)"
-
-log "customers=$CUSTOMER_COUNT"
-log "orders=$ORDER_COUNT"
-log "audit_events=$AUDIT_COUNT"
+log "Baseline dashboard query stages: $BASELINE_STAGE"
 
 # ------------------------------------------------------------
-# Validate expected data
+# Environment file
 # ------------------------------------------------------------
 
-if [ "$CUSTOMER_COUNT" -ne 1000 ]; then
-    log "ERROR: Expected 1000 customers, found $CUSTOMER_COUNT"
-    exit 1
-fi
+log "Creating environment file"
 
-if [ "$ORDER_COUNT" -ne 5000 ]; then
-    log "ERROR: Expected 5000 orders, found $ORDER_COUNT"
-    exit 1
-fi
-
-if [ "$AUDIT_COUNT" -lt 1 ]; then
-    log "ERROR: Expected at least 1 audit event, found $AUDIT_COUNT"
-    exit 1
-fi
-
-log "Database validation successful"
+cat > "${WORK_ROOT}/.env" <<'ENVFILE'
+MONGODB_URI=mongodb://127.0.0.1:27017/branchops
+MONGODB_HOST=127.0.0.1
+MONGODB_PORT=27017
+MONGODB_DATABASE=branchops
+MONGODB_AUTH_MODE=disabled
+LAB_WORKSPACE=/opt/cloudlabs/mongodb-dashboard
+ENVFILE
+chmod 0644 "${WORK_ROOT}/.env"
 
 # ------------------------------------------------------------
-# Create a small initial evidence file
+# Helper and reset scripts
 # ------------------------------------------------------------
 
-log "Creating initial evidence"
+log "Creating helper, incident, and reset scripts"
 
-cat > "${EVIDENCE_ROOT}/database-initialization.txt" <<EOF
-MongoDB Customer Data Fundamentals
-==================================
+# Module 3: the exact slow dashboard query, ready to explain.
+cat > "${SCRIPTS_DIR}/m3-dashboard-query.js" <<'M3QUERY'
+// The branch-performance dashboard "recent high-value completed
+// transactions" panel. This is the query you must diagnose and
+// optimize in Module 3.
+const bdb = db.getSiblingDB("branchops");
 
-MongoDB Version:
-${MONGO_VERSION}
+const cursor = bdb.transactions.find({
+    branchCode: "BR-014",
+    status: "completed",
+    amount: { $gte: 5000 }
+}).sort({ transactionDate: -1 }).limit(50);
 
-Database:
-customer360
+printjson(cursor.explain("executionStats"));
+M3QUERY
+chmod 0644 "${SCRIPTS_DIR}/m3-dashboard-query.js"
 
-Collections:
-customers
-orders
-audit_events
+# Reset helpers
+cat > "${RESET_DIR}/reset-dataset.sh" <<'RESETDATA'
+#!/usr/bin/env bash
+set -euo pipefail
+WORK_ROOT="/opt/cloudlabs/mongodb-dashboard"
+sudo systemctl enable mongod >/dev/null
+sudo systemctl start mongod
+mongosh --quiet "${WORK_ROOT}/data/seed-branchops.js"
+echo "branchops dataset reset to initial seed state."
+RESETDATA
+chmod +x "${RESET_DIR}/reset-dataset.sh"
 
-Initial document counts:
-customers=${CUSTOMER_COUNT}
-orders=${ORDER_COUNT}
-audit_events=${AUDIT_COUNT}
+cat > "${RESET_DIR}/clear-evidence.sh" <<'RESETCLEAN'
+#!/usr/bin/env bash
+set -euo pipefail
+WORK_ROOT="/opt/cloudlabs/mongodb-dashboard"
+find "${WORK_ROOT}/evidence" -mindepth 1 -maxdepth 1 -type f ! -name 'bootstrap-seed-output.txt' ! -name 'bootstrap-status.json' -delete
+find "${WORK_ROOT}/evidence" -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +
+echo "Evidence folder cleared."
+RESETCLEAN
+chmod +x "${RESET_DIR}/clear-evidence.sh"
 
-MongoDB Service:
-$(systemctl is-active mongod)
+# ------------------------------------------------------------
+# Workspace README and shell profile helper
+# ------------------------------------------------------------
 
-Bootstrap completed:
-$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+cat > "${WORK_ROOT}/README.txt" <<'README'
+MongoDB — Dashboard Query Performance lab workspace
+
+Primary database: branchops
+Collections: branches, transactions, audit_events
+
+Key folders:
+- data:     seed files
+- scripts:  provided helper scripts and the slow dashboard query
+- evidence: learner-created validation evidence (Modules 1, 3, 4)
+- reset:    reset helpers
+
+The branch-performance dashboard query starts as a COLLSCAN by
+design. Module 3 asks you to diagnose it with explain() and fix
+it with an ESR-ordered compound index. Module 4 builds the
+dashboard aggregation pipeline and scripts automated proof that
+the index is used.
+
+Modules 2, 5, 6, and 7 are scenario-and-knowledge-check modules
+with no hands-on evidence files or validations.
+
+Do not store passwords, Atlas API keys, private keys, or full
+connection strings in evidence files.
+README
+chmod 0644 "${WORK_ROOT}/README.txt"
+
+cat > /etc/profile.d/cloudlabs-mongodb-dashboard.sh <<'PROFILE'
+export DASH_LAB_HOME=/opt/cloudlabs/mongodb-dashboard
+alias dashlab='cd /opt/cloudlabs/mongodb-dashboard'
+PROFILE
+chmod 0644 /etc/profile.d/cloudlabs-mongodb-dashboard.sh
+
+# ------------------------------------------------------------
+# Bootstrap status evidence
+# ------------------------------------------------------------
+
+cat > "${EVIDENCE_DIR}/bootstrap-status.json" <<EOF
+{
+  "status": "completed",
+  "database": "branchops",
+  "branchesSeeded": 40,
+  "transactionsSeeded": 20000,
+  "dashboardQueryBaselineStage": "COLLSCAN",
+  "authenticationInitialState": "disabled",
+  "mongodbVersion": "${MONGO_VERSION}",
+  "workspace": "${WORK_ROOT}",
+  "createdAtUtc": "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+}
 EOF
-
-chown "${LAB_USER}:${LAB_USER}" \
-    "${EVIDENCE_ROOT}/database-initialization.txt"
-
-chmod 644 \
-    "${EVIDENCE_ROOT}/database-initialization.txt"
+chmod 0644 "${EVIDENCE_DIR}/bootstrap-status.json"
 
 # ------------------------------------------------------------
-# Clean temporary files
+# Permissions and lab-user symlink
 # ------------------------------------------------------------
 
-log "Cleaning temporary bootstrap files"
+if [ -n "$LAB_USER" ] && id "$LAB_USER" >/dev/null 2>&1; then
+    chown -R "${LAB_USER}:${LAB_USER}" "$WORK_ROOT"
+    ln -sfn "$WORK_ROOT" "/home/${LAB_USER}/mongodb-dashboard"
+    chown -h "${LAB_USER}:${LAB_USER}" "/home/${LAB_USER}/mongodb-dashboard" || true
+fi
 
-rm -rf "$TMP_ROOT"
-
-# ------------------------------------------------------------
-# Final permissions
-# ------------------------------------------------------------
-
-chown -R "${LAB_USER}:${LAB_USER}" "$WORK_ROOT"
-
-chmod 755 "$WORK_ROOT"
-chmod 755 "$BACKUP_ROOT"
-chmod 755 "$EVIDENCE_ROOT"
+chmod -R u+rwX,g+rwX,o+rX "$WORK_ROOT"
+chmod -R a+w "$EVIDENCE_DIR" "$SCRIPTS_DIR"
 
 # ------------------------------------------------------------
 # Final MongoDB verification
@@ -693,34 +546,13 @@ if ! mongosh \
     exit 1
 fi
 
-# ------------------------------------------------------------
-# Final output
-# ------------------------------------------------------------
-
 log "=========================================="
-log "MongoDB Customer Data Fundamentals"
+log "MongoDB — Dashboard Query Performance"
 log "Bootstrap completed successfully"
 log "=========================================="
-
-log "MongoDB status:"
-log "active"
-
-log "MongoDB version:"
-log "$MONGO_VERSION"
-
-log "Database counts:"
-log "customers=$CUSTOMER_COUNT"
-log "orders=$ORDER_COUNT"
-log "audit_events=$AUDIT_COUNT"
-
-log "Learner workspace:"
-log "$WORK_ROOT"
-
-log "Learner directories:"
-log "$BACKUP_ROOT"
-log "$EVIDENCE_ROOT"
-
-log "Bootstrap log:"
-log "$BOOTSTRAP_LOG"
+log "MongoDB version: $MONGO_VERSION"
+log "Counts: $COUNTS_OUTPUT"
+log "Workspace: $WORK_ROOT"
+log "Bootstrap log: $BOOTSTRAP_LOG"
 
 exit 0
