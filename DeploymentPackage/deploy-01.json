@@ -19,7 +19,7 @@
     }
   },
   "variables": {
-    "scripturl": "https://simplilearnstorage4564.blob.core.windows.net/nedbank/bootstrap.sh",
+    "scripturl": "https://raw.githubusercontent.com/Raghavendrak-spektra/Nedbank-Mongodb/refs/heads/main/DeploymentPackage/bootstrap.sh",
     "LabVMName": "[concat('labvm-', parameters('DeploymentID'))]",
     "virtualNetworkName": "[concat('vnet-', parameters('DeploymentID'))]",
     "subnetName": "default",
