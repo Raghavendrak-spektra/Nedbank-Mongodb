@@ -17,7 +17,7 @@ Option 4 : The connection string format is incompatible with Atlas security feat
 Option 1 : 1
 
 ## Correct Answer Feedback
-Option 1 is correct.
+Option 1 is correct
 
 ## Number of Retries
 1

@@ -17,7 +17,7 @@ Option 4 : It proves that the `read` role on `customer360` correctly grants perm
 Option 4 : 1
 
 ## Correct Answer Feedback
-Option 4 is correct.
+Option 4 is correct
 
 ## Number of Retries
 1

@@ -17,7 +17,7 @@ Option 4 : Multiple roles on a single user account confuses MongoDB's authorizat
 Option 3 : 1
 
 ## Correct Answer Feedback
-Option 3 is correct.
+Option 3 is correct
 
 ## Number of Retries
 1

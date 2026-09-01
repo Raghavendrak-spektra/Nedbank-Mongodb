@@ -17,7 +17,7 @@ Option 4 : The backup settings to confirm that automated backups are not blockin
 Option 3 : 1
 
 ## Correct Answer Feedback
-Option 3 is correct.
+Option 3 is correct
 
 ## Number of Retries
 1

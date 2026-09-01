@@ -17,7 +17,7 @@ Option 4 : The password settings, because authorization and authentication are t
 Option 2 : 1
 
 ## Correct Answer Feedback
-Option 2 is correct.
+Option 2 is correct
 
 ## Number of Retries
 1

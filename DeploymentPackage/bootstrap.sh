@@ -95,6 +95,10 @@ chmod 700 "$TMP_ROOT"
 
 log "Installing prerequisite packages"
 
+# Fix for Ubuntu command-not-found database update issue
+# Remove the problematic post-invoke hook temporarily
+rm -f /etc/apt/apt.conf.d/50command-not-found
+
 apt-get update -y
 
 apt-get install -y \

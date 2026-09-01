@@ -17,7 +17,7 @@ Option 4 : MongoDB requires all user accounts to exist before any security featu
 Option 2 : 1
 
 ## Correct Answer Feedback
-Option 2 is correct.
+Option 2 is correct
 
 ## Number of Retries
 1

@@ -17,7 +17,7 @@ Option 4 : Create index `{ status: 1, orderDate: 1 }` and MongoDB will automatic
 Option 3 : 1
 
 ## Correct Answer Feedback
-Option 3 is correct.
+Option 3 is correct
 
 ## Number of Retries
 1

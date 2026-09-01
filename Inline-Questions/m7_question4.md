@@ -17,7 +17,7 @@ Option 4 : Leave the `readWriteAnyDatabase` role in place because changing roles
 Option 3 : 1
 
 ## Correct Answer Feedback
-Option 3 is correct.
+Option 3 is correct
 
 ## Number of Retries
 1

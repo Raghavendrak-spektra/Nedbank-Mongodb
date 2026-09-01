@@ -17,7 +17,7 @@ Option 4 : MongoDB is partially running with some processes active but the main 
 Option 3 : 1
 
 ## Correct Answer Feedback
-Option 3 is correct.
+Option 3 is correct
 
 ## Number of Retries
 1

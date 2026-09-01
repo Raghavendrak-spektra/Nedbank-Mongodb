@@ -17,7 +17,7 @@ Option 4 : The authorization system is successfully enforcing role-based access 
 Option 4 : 1
 
 ## Correct Answer Feedback
-Option 4 is correct.
+Option 4 is correct
 
 ## Number of Retries
 1

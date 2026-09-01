@@ -17,7 +17,7 @@ Option 4 : It proves that MongoDB Atlas is now completely secure and no further 
 Option 2 : 1
 
 ## Correct Answer Feedback
-Option 2 is correct.
+Option 2 is correct
 
 ## Number of Retries
 1
